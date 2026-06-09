@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咖啡店經營數據決策儀表板 - 老闆專屬報表 V5</title>
+    <style>
+        :root {
+            --primary-color: #5c2c16;
+            --secondary-color: #8B4513;
+            --accent-color: #D2691E;
+            --bg-light: #fdfaf7;
+            --text-dark: #2c1a11;
+            --card-bg: #ffffff;
+            --border-color: #eaddd5;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif, "Microsoft JhengHei";
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 25px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* 核心 KPI 看板 */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(44,26,17,0.05);
+        }
+
+        .kpi-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #7a6256;
+            text-transform: uppercase;
+        }
+
+        .kpi-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .kpi-card .subtext {
+            font-size: 12px;
+            color: #9e8576;
+            margin-top: 5px;
+        }
+
+        /* 區塊與網格樣式 */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 6px 15px rgba(44,26,17,0.02);
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 992px) {
+            .grid-2 {
+                display: grid;
+                grid-template-columns: 1.1fr 0.9fr;
+                gap: 30px;
+            }
+            .grid-charts-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .store-detail-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                margin-top: 25px;
+            }
+        }
+
+        .chart-box {
+            text-align: center;
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #f2ece7;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .chart-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chart-box img:hover {
+            transform: scale(1.015);
+            box-shadow: 0 6px 15px rgba(92,44,22,0.15);
+        }
+
+        /* 動態預測圖表專用容器 */
+        .forecast-container {
+            width: 100%;
+            height: 520px; /* 稍微拉高高度，展現橫向大圖的氣勢 */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+            margin-top: 10px;
+        }
+
+        .forecast-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .chart-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-top: 8px;
+        }
+
+        .insight-box {
+            background: #fcf8f5;
+            border: 1px dashed #d9c5b6;
+            border-radius: 8px;
+            padding: 22px;
+            height: fit-content;
+        }
+
+        .insight-box h4 {
+            margin-top: 0;
+            color: var(--secondary-color);
+            font-size: 16px;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 8px;
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #f5eae2;
+            color: var(--primary-color);
+            text-align: left;
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:nth-child(even) {
+            background-color: #faf6f2;
+        }
+
+        .action-item {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .action-item strong {
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        /* 燈箱彈出層 CSS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(20, 12, 8, 0.92);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 92%;
+            max-height: 90%;
+            object-fit: contain;
+            border: 4px solid #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ffffff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>☕ 咖啡店經營數據決策儀表板</h1>
+        <p>資料範圍：2023年1月 至 2023年6月歷史分析 ＆ 7月動態預測 | 💡 提示：點擊歷史圖表可放大，頂部動態圖表可直接互動</p>
+    </header>
+
+    <div class="container">
+
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <h3>總營業額 (Total Revenue)</h3>
+                <div class="value">$698,812.33</div>
+                <div class="subtext">上半年累計總營收</div>
+            </div>
+            <div class="kpi-card">
+                <h3>總交易筆數 (Transactions)</h3>
+                <div class="value">149,116 筆</div>
+                <div class="subtext">不重複訂單總量</div>
+            </div>
+            <div class="kpi-card">
+                <h3>平均客單價 (AOV)</h3>
+                <div class="value">$4.69</div>
+                <div class="subtext">單筆訂單平均消費額</div>
+            </div>
+            <div class="kpi-card">
+                <h3>金雞母分店 (Top Store)</h3>
+                <div class="value">Hell's Kitchen</div>
+                <div class="subtext">總營收 $236,511 領先</div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">一、營收趨勢、增長規律與 7 月數據預測 (Revenue, Growth & Forecast)</h2>
+            
+            <div class="chart-box" style="margin-bottom: 25px; padding: 20px;">
+                <div class="forecast-container">
+                    <iframe src="coffee_sales_prediction_forecast.html" class="forecast-iframe"></iframe>
+                </div>
+                <div class="chart-label">【核心決策看板】每日行銷趨勢與 7 月營收動態預測（可在圖內自由滑動縮放、探索交叉數值）</div>
+            </div>
+
+            <div class="grid-2">
+                <div class="chart-box" style="margin-bottom: 0;">
+                    <img src="revenue_trend.png" alt="總營收趨勢圖" class="zoomable-img">
+                    <div class="chart-label">圖1-1 上半年各月營收走勢歷史折線圖 (點擊可全螢幕放大)</div>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>📈 數據解讀與營收預測洞察：</h4>
+                    <p><strong>歷史成長回顧：</strong> 上半年業績表現強勁，營收從 1 月的 $81,677 爬升至 6 月的 $166,485，展現出完美的流量紅利增長。但因客單價（AOV）停滯在 $4.69 附近，營收完全由單純的「來客數暴增」所驅動。</p>
+                    <p><strong>🔮 7月預測與決策防線：</strong> 結合上方 <strong>核心動態預測模型</strong> 可以直觀看出，進入 7 月盛夏後，每日營銷走勢受到氣溫與季節性需求的波動影響。利用這個置頂看板，老闆可以提早做好兩件事：</p>
+                    <p>1. <b>高毛利冰飲產能全開：</b> 預測顯示 7 月部分大熱天將迎來營收高峰，應將高毛利的冷泡茶（Brewed Chai/Herbal Tea）與冰濃縮（Barista Espresso）的原物料備貨量提高 25%。</p>
+                    <p>2. <b>精準鎖定離峰採購：</b> 對照動態預測線的低谷日，可提早與烘豆坊微調生豆採購週期，避免新鮮咖啡豆因夏季高溫潮濕積壓在倉庫中變質，達成極致的庫存管控。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">二、產品組合優化 (Product Mix & Menu Engineering)</h2>
+            <div class="grid-2">
+                <div class="chart-box">
+                    <img src="product_categories.png" alt="產品品類營收佔比" class="zoomable-img">
+                    <div class="chart-label">圖2-1 全店品類營收總貢獻排行 (Sorted)</div>
+                </div>
+                <div class="insight-box">
+                    <h4>📊 品類結構分析：</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>品類名稱 (Category)</th>
+                                <th>銷售總量 (Qty)</th>
+                                <th>營收金額 ($)</th>
+                                <th>營收佔比 (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><b>Coffee (咖啡飲品)</b></td><td>89,250</td><td>$269,952.45</td><td>38.63%</td></tr>
+                            <tr><td><b>Tea (茶飲)</b></td><td>69,737</td><td>$196,405.95</td><td>28.11%</td></tr>
+                            <tr><td><b>Bakery (烘焙糕點)</b></td><td>23,214</td><td>$82,315.64</td><td>11.78%</td></tr>
+                            <tr><td><b>Drinking Chocolate (熱可可)</b></td><td>17,457</td><td>$72,416.00</td><td>10.36%</td></tr>
+                            <tr><td><b>Coffee beans (咖啡豆)</b></td><td>1,828</td><td>$40,085.25</td><td>5.74%</td></tr>
+                            <tr><td>其他 (周邊/糖漿等)</td><td>12,984</td><td>$37,637.04</td><td>5.38%</td></tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:12px; font-size:13px;"><strong>核心發現：</strong> 咖啡與茶飲是店內的絕對支柱，兩者合佔 66.7% 的總營收。值得注意的是，Flavours（風味糖漿）銷量雖破萬，	但營收佔比僅 1.20%，有極大的加購提升空間。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">三、黃金時段與排班建議 (Time & Day Analysis)</h2>
+            <div class="main-layout">
+                <div class="grid-charts-2">
+                    <div class="chart-box">
+                        <img src="hourly_peaks.png" alt="時段營收分佈圖" class="zoomable-img">
+                        <div class="chart-label">圖3-1 24小時營收貢獻分佈 (依尖峰排序)</div>
+                    </div>
+                    <div class="chart-box">
+                        <img src="weekday_revenue.png" alt="週間營收對比圖" class="zoomable-img">
+                        <div class="chart-label">圖3-2 星期一至星期日營業額對比 (依營收排序)</div>
+                    </div>
+                </div>
+                <div class="insight-box" style="margin-top: 10px;">
+                    <h4>⏳ 尖峰時刻與週間驚人規律分析：</h4>
+                    <p><strong>1. 針對早晨尖峰優化：</strong> 營收極度集中在 <strong>早上 7:00 至 10:00</strong>，其中 10:00 AM 是全天的最高峰（貢獻高達 $88,673）。建議早上 7:00-11:00 配置「雙吧台手」極速出餐；18:00 以後進入極淡期，可縮減至單人顧店，甚至提早關店以節省營運成本。</p>
+                    <p><strong>2. 週間營收呈現驚人平穩：</strong> 從 <strong>圖3-2 週間營收圖</strong> 可以直觀看出，週一至週日的營業額分布極度均勻，最高點與最低點差距僅在 5% 左右。這說明基本客群（商務與在地居民互補）極為牢固，**老闆在週末不需要大幅加派人手，應維持與平日相仿的精簡人力編制**。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">四、店鋪與地理表現 (Store Performance)</h2>
+            <div class="main-layout">
+                <div class="grid-2">
+                    <div class="chart-box">
+                        <img src="store_comparison.png" alt="分店營收表現對比" class="zoomable-img">
+                        <div class="chart-label">圖4-1 三大分店總營業額對比</div>
+                    </div>
+                    <div class="insight-box">
+                        <h4>📍 總體地理表現摘要：</h4>
+                        <p>雖然三家分店的總營業額極度接近（如圖4-1），但透過細分指標拆解發現，各店鋪背後的顧客結構與消費習慣存在巨大的地理與特質差異。我們分別針對這三家分店進行了深度數據畫像，點擊下方小圖即可全螢幕檢視具體細節：</p>
+                    </div>
+                </div>
+
+                <div class="store-detail-grid">
+                    <div class="chart-box">
+                        <img src="store_aov.png" alt="曼哈頓下城店客單價" class="zoomable-img">
+                        <div class="chart-label">圖4-2 各店客單價 (AOV) 對照</div>
+                        <p style="text-align: left; font-size: 13px; margin-top: 10px; color: #555;">
+                            <strong>Lower Manhattan (下城店) - 高含金量客群：</strong><br>
+                            雖然總交易筆數最少，但由 <strong>圖4-2</strong> 可知其**客單價高達 $4.81**，穩居全店之冠！此區域多為金融商務人士，追求精緻、對價格敏感度低。
+                        </p>
+                    </div>
+
+                    <div class="chart-box">
+                        <img src="store_coffee_beans_pct.png" alt="地獄廚房店熟豆佔比" class="zoomable-img">
+                        <div class="chart-label">圖4-3 咖啡熟豆營收佔比對照</div>
+                        <p style="text-align: left; font-size: 13px; margin-top: 10px; color: #555;">
+                            <strong>Hell's Kitchen (地獄廚房店) - 零售熟豆之王：</strong><br>
+                            由 <strong>圖4-3</strong> 可以發現，該店的 **Coffee beans（零售咖啡熟豆）銷售佔比高達 7.88%**，遠超其他兩店的 4.4%。說明該區常客極度偏好買優質熟豆回家自煮。
+                        </p>
+                    </div>
+
+                    <div class="chart-box">
+                        <img src="astoria_revenue_mix.png" alt="阿斯托里亞店品類佔比" class="zoomable-img">
+                        <div class="chart-label">圖4-4 Astoria店鋪品類份額拆解</div>
+                        <p style="text-align: left; font-size: 13px; margin-top: 10px; color: #555;">
+                            <strong>Astoria (阿斯托里亞店) - 悠閒茶飲聚落：</strong><br>
+                            從 <strong>圖4-4</strong> 該店的獨立品類拆解中可以看到，其 **Tea（茶飲）營收佔比高達 29.21%**（高居第二大支柱）。此區客群步調較慢，相比咖啡更偏好非咖啡類的休閒茶品。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" style="border-top: 5px solid var(--primary-color);">
+            <h2 class="section-title" style="color: var(--primary-color);">🎯 五、給老闆的精準加分策略 (Actionable Insights)</h2>
+            <p>結合歷史指標與 7 月動態預測趨勢，以下三套方案能精準將數據轉化為現金流：</p>
+            
+            <div class="action-item">
+                <strong>1. 主動式「咖啡升級風味」策略（優先投放 Lower Manhattan 店）</strong>
+                <p>既然下城店客單價最高（$4.81）且最願意為客製化買單，建議針對該店 POS 系統與店員進行話術設定：點黑咖啡或Latte時，主動口頭提示「<i>僅需 $0.5 即可升級榛果/香草風味</i>」，將高毛利的糖漿（Flavours）直接綁定銷售，突破客單價停滯瓶頸。</p>
+            </div>
+
+            <div class="action-item">
+                <strong>2. 「11點後」烘焙醒覺午茶套餐（挽救離峰營收）</strong>
+                <p>早晨11:00過後營收大跌。然而，Bakery（烘焙）是全店利潤與銷售兼具的第三大品類（Astoria 店佔比亦達 11.5%）。應設計「<b>午茶醒覺組合：指定美式/茶飲 + 糕點任選 85 折</b>」，精準卡位 11:00 - 15:00，拉高平穩期客單價並消耗冗餘人力。</p>
+            </div>
+
+            <div class="action-item">
+                <strong>3. 基於地理畫像與預測趨勢的區域陳列與採購控制</strong>
+                <p>● <b>Hell's Kitchen 店：</b> 其熟豆份額 (7.88%) 冠絕全場，每月應將店內門面最醒目的黃金陳列架留給 Ethiopia 與 Organic 咖啡熟豆包裝，並保持生豆與烘焙週期的庫存高水位。
+                <br>● <b>Astoria 店：</b> 鑑於其茶飲份額逼近 30%，應在夏季主打茶飲新品特調，並將精緻茶葉（如 Morning Sunrise Chai）庫存提高 15% 以防斷貨。</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="imageModal">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <img class="modal-content" id="modalTargetImg" src="" alt="放大圖表">
+    </div>
+
+    <script>
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalTargetImg');
+        const closeBtn = document.getElementById('modalClose');
+        const zoomImages = document.querySelectorAll('.zoomable-img');
+
+        zoomImages.forEach(img => {
+            img.addEventListener('click', function() {
+                modal.classList.add('active');
+                modalImg.src = this.src;
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal || e.target === modalImg) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+</html>
