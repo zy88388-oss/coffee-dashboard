@@ -237,35 +237,54 @@
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 18px;
         }
 
         .map-kpi {
             background: #fff8f2;
             border: 1px solid #ead7c8;
             border-radius: 8px;
-            padding: 9px 10px;
-            min-height: 54px;
+            padding: 6px 10px;
+            min-height: 44px;
         }
 
         .map-kpi .kpi-label {
             color: #8a6250;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
             margin-bottom: 3px;
         }
 
         .map-kpi .kpi-main {
             color: var(--primary-color);
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 900;
             line-height: 1.15;
         }
 
         .map-kpi .kpi-sub {
             color: #9e8576;
-            font-size: 10px;
+            font-size: 9px;
             margin-top: 2px;
+        }
+
+        .map-kpi[data-store] {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .map-kpi[data-store]:hover,
+        .map-kpi[data-store]:focus-visible {
+            transform: translateY(-9px) scale(1.04);
+            border-color: var(--accent-color);
+            background: #fff0e4;
+            box-shadow: 0 16px 30px rgba(92,44,22,0.24);
+            outline: none;
+        }
+
+        .map-kpi[data-store]:hover .kpi-main,
+        .map-kpi[data-store]:focus-visible .kpi-main {
+            color: #7a2f12;
         }
 
         .nyc-map {
@@ -280,6 +299,17 @@
 
         .nyc-map.is-dragging {
             cursor: grabbing;
+        }
+
+        .store-map-interactive .nyc-map {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .store-map-interactive .nyc-map:hover,
+        .store-map-interactive .nyc-map:focus-within {
+            transform: translateY(-4px) scale(1.008);
+            border-color: var(--accent-color);
+            box-shadow: 0 12px 28px rgba(92,44,22,0.15);
         }
 
         .map-canvas {
@@ -394,6 +424,66 @@
         .pin-hells { left: 29%; top: 25%; background: #c55a1b; }
         .pin-astoria { left: 76%; top: 25%; background: #3fa65a; }
         .pin-lower { left: 40%; top: 68%; background: #e0aa18; }
+
+        .store-map-interactive {
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+.store-map-interactive .map-pin,
+        .store-map-interactive .map-label,
+        .store-map-interactive .map-kpi,
+        .store-map-interactive .map-zoom,
+        .store-map-interactive .map-expand-button {
+            cursor: pointer;
+        }
+
+        .store-pulse-pin {
+            z-index: 8;
+            --store-pin-core: #a34f1b;
+            --store-pin-halo: rgba(225, 95, 42, 0.26);
+            box-shadow: 0 0 0 10px rgba(255,255,255,0.58), 0 0 0 22px var(--store-pin-halo), 0 12px 28px rgba(124, 48, 18, 0.32);
+        }
+
+        .pin-astoria.store-pulse-pin {
+            --store-pin-core: #2f8f46;
+            --store-pin-halo: rgba(63, 166, 90, 0.26);
+        }
+
+        .pin-lower.store-pulse-pin {
+            --store-pin-core: #d99c00;
+            --store-pin-halo: rgba(224, 170, 24, 0.28);
+        }
+
+        .store-pulse-pin::before {
+            width: 26px;
+            height: 26px;
+            background: var(--store-pin-core);
+            filter: none;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.86);
+        }
+
+        .store-pulse-pin::after {
+            width: 68px;
+            height: 68px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--store-pin-halo);
+            animation: storeMapPulse 1.35s ease-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes storeMapPulse {
+            from {
+                transform: translate(-50%, -50%) scale(0.62);
+                opacity: 0.95;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1.95);
+                opacity: 0;
+            }
+        }
 
         .map-label {
             position: absolute;
@@ -748,6 +838,103 @@
             transform: scale(1.015);
             box-shadow: 0 6px 15px rgba(92,44,22,0.15);
         }
+        .revenue-pulse-chart {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            line-height: 0;
+        }
+
+        .revenue-pulse-chart .zoomable-img {
+            display: block;
+        }
+
+        .revenue-chart-title {
+            margin: 8px 0 4px;
+            text-align: center;
+            color: #333333;
+            font-size: 18px;
+            line-height: 1.35;
+            font-weight: 700;
+        }
+
+        .revenue-trend-dynamic {
+            width: 100%;
+            height: 390px;
+            min-height: 350px;
+        }
+
+        .revenue-interactive-card {
+            cursor: zoom-in;
+        }
+
+        .revenue-interactive-card:hover {
+            transform: scale(1.015);
+            box-shadow: 0 6px 15px rgba(92,44,22,0.15);
+        }
+
+        .revenue-chart-modal-content {
+            width: min(1180px, 94vw);
+            height: min(760px, 86vh);
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 22px 24px 16px;
+            cursor: auto;
+        }
+
+        #revenueTrendChartModal {
+            width: 100%;
+            height: calc(100% - 64px);
+            min-height: 520px;
+        }
+
+        .revenue-pulse-marker {
+            position: absolute;
+            left: 91.5%;
+            top: 24.5%;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #a3541b;
+            border: 3px solid #fff7ef;
+            box-shadow: 0 0 0 0 rgba(211, 105, 30, 0.58), 0 0 16px rgba(211, 105, 30, 0.55);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 2;
+            animation: revenuePulseDot 1.55s ease-out infinite;
+        }
+
+        .revenue-pulse-marker::after {
+            content: "";
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2px solid rgba(211, 105, 30, 0.42);
+            animation: revenuePulseRing 1.55s ease-out infinite;
+        }
+
+        @keyframes revenuePulseDot {
+            0% {
+                box-shadow: 0 0 0 0 rgba(211, 105, 30, 0.58), 0 0 12px rgba(211, 105, 30, 0.45);
+            }
+            70% {
+                box-shadow: 0 0 0 18px rgba(211, 105, 30, 0), 0 0 22px rgba(211, 105, 30, 0.72);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(211, 105, 30, 0), 0 0 12px rgba(211, 105, 30, 0.45);
+            }
+        }
+
+        @keyframes revenuePulseRing {
+            0% {
+                opacity: 0.82;
+                transform: scale(0.45);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.35);
+            }
+        }
 
         /* 動態預測圖表專用容器 */
         .forecast-container {
@@ -878,7 +1065,9 @@
             color: var(--accent-color);
         }
     </style>
-</head>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script></head>
 <body>
 
     <header>
@@ -981,9 +1170,10 @@
         <div class="section-card topic-panel" id="product-insights-detail" data-topic-panel>
             <h2 class="section-title">產品洞察</h2>
             <div class="grid-2">
-                <div class="chart-box" style="margin-bottom: 0;">
-                    <img src="revenue_trend.png" alt="總營收趨勢圖" class="zoomable-img">
-                    <div class="chart-label">圖1-1 上半年各月營收走勢歷史折線圖 (點擊可全螢幕放大)</div>
+                <div class="chart-box revenue-interactive-card" id="revenueTrendCard" style="margin-bottom: 0;" role="button" tabindex="0" aria-label="放大上半年各月營收走勢互動折線圖">
+                    <div class="revenue-chart-title">每月營收走勢趨勢<br>Monthly Revenue Trend (Jan - Jun 2023)</div>
+                    <div id="revenueTrendChart" class="revenue-trend-dynamic" aria-label="上半年各月營收走勢互動折線圖"></div>
+                    <div class="chart-label">圖1-1 上半年各月營收走勢互動折線圖（滑鼠移動可查看月份與營收）</div>
                 </div>
                 
                 <div class="insight-box">
@@ -1052,7 +1242,7 @@
             <h2 class="section-title">四、店鋪與地理表現 (Store Performance)</h2>
             <div class="main-layout">
                 <div class="store-hero-grid">
-                    <div class="chart-box revenue-map-card" id="revenueMapCard">
+                    <div class="chart-box revenue-map-card store-map-interactive" id="revenueMapCard" role="button" tabindex="0" aria-label="放大營收地圖">
                         <div class="revenue-map-title">
                             <span>1. 營業收地圖分布 (Revenue Map)</span>
                             <button type="button" class="map-expand-button" id="openRevenueMapModal" aria-label="放大營收地圖">⛶</button>
@@ -1086,13 +1276,13 @@
                                 <span class="borough-label" style="left: 80%; top: 37%;">QUEENS</span>
                                 <span class="borough-label" style="left: 47%; top: 82%;">BROOKLYN</span>
 
-                                <button type="button" class="map-pin pin-hells" data-store="hells" aria-label="Hell's Kitchen $236,511"></button>
+                                <button type="button" class="map-pin pin-hells store-pulse-pin" data-store="hells" aria-label="Hell's Kitchen $236,511"></button>
                                 <button type="button" class="map-label label-hells" data-store="hells">Hell's Kitchen <span>$236,511</span></button>
 
-                                <button type="button" class="map-pin pin-astoria" data-store="astoria" aria-label="Astoria $232,244"></button>
+                                <button type="button" class="map-pin pin-astoria store-pulse-pin" data-store="astoria" aria-label="Astoria $232,244"></button>
                                 <button type="button" class="map-label label-astoria" data-store="astoria">Astoria <span>$232,244</span></button>
 
-                                <button type="button" class="map-pin pin-lower" data-store="lower" aria-label="Lower Manhattan $230,057"></button>
+                                <button type="button" class="map-pin pin-lower store-pulse-pin" data-store="lower" aria-label="Lower Manhattan $230,057"></button>
                                 <button type="button" class="map-label label-lower" data-store="lower">Lower Manhattan <span>$230,057</span></button>
                             </div>
 
@@ -1180,6 +1370,14 @@
         <img class="modal-content" id="modalTargetImg" src="" alt="放大圖表">
     </div>
 
+    <div class="modal-overlay" id="revenueChartModal">
+        <span class="modal-close" id="revenueChartModalClose">&times;</span>
+        <div class="modal-content revenue-chart-modal-content">
+            <div class="revenue-chart-title">每月營收走勢趨勢<br>Monthly Revenue Trend (Jan - Jun 2023)</div>
+            <div id="revenueTrendChartModal" aria-label="放大的上半年各月營收走勢互動折線圖"></div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="mapModal">
         <span class="modal-close" id="mapModalClose">&times;</span>
         <div class="modal-content map-modal-content" id="mapModalContent"></div>
@@ -1196,6 +1394,9 @@
         const mapModalClose = document.getElementById('mapModalClose');
         const mapModalContent = document.getElementById('mapModalContent');
         const openRevenueMapModal = document.getElementById('openRevenueMapModal');
+        const revenueTrendCard = document.getElementById('revenueTrendCard');
+        const revenueChartModal = document.getElementById('revenueChartModal');
+        const revenueChartModalClose = document.getElementById('revenueChartModalClose');
 
         const storeMapData = {
             hells: {
@@ -1331,11 +1532,14 @@
             document.body.style.overflow = '';
         }
 
-        openRevenueMapModal?.addEventListener('click', function() {
+        function openRevenueMapDetail() {
             const sourceCard = document.getElementById('revenueMapCard');
             if (!sourceCard) return;
             const modalCard = sourceCard.cloneNode(true);
             modalCard.id = 'revenueMapCardModal';
+            modalCard.classList.remove('store-map-interactive');
+            modalCard.removeAttribute('role');
+            modalCard.removeAttribute('tabindex');
             modalCard.querySelector('#openRevenueMapModal')?.remove();
             modalCard.dataset.mapReady = 'false';
             mapModalContent.innerHTML = '';
@@ -1343,6 +1547,23 @@
             mapModal.classList.add('active');
             document.body.style.overflow = 'hidden';
             setupRevenueMap(modalCard);
+        }
+
+        openRevenueMapModal?.addEventListener('click', function(event) {
+            event.stopPropagation();
+            openRevenueMapDetail();
+        });
+
+        document.getElementById('revenueMapCard')?.addEventListener('click', function(event) {
+            if (event.target.closest('[data-store], .map-zoom, .map-expand-button')) return;
+            openRevenueMapDetail();
+        });
+
+        document.getElementById('revenueMapCard')?.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openRevenueMapDetail();
+            }
         });
 
         mapModalClose?.addEventListener('click', closeMapModal);
@@ -1353,6 +1574,198 @@
             }
         });
 
+        let revenueTrendRoot = null;
+        let revenueTrendModalRoot = null;
+
+        const revenueTrendData = [
+            { month: 'January', revenue: 81678, label: '$81,678' },
+            { month: 'February', revenue: 76145, label: '$76,145' },
+            { month: 'March', revenue: 98835, label: '$98,835' },
+            { month: 'April', revenue: 118941, label: '$118,941' },
+            { month: 'May', revenue: 156728, label: '$156,728' },
+            { month: 'June', revenue: 166486, label: '$166,486', isLast: true }
+        ];
+
+        function buildRevenueTrendChart(containerId, isModal = false) {
+            const root = am5.Root.new(containerId);
+            root.setThemes([am5themes_Animated.new(root)]);
+
+            const chart = root.container.children.push(am5xy.XYChart.new(root, {
+                panX: false,
+                panY: false,
+                wheelX: 'none',
+                wheelY: 'none',
+                paddingTop: isModal ? 18 : 42,
+                paddingRight: isModal ? 44 : 28,
+                paddingBottom: 10,
+                paddingLeft: 8
+            }));
+
+            const xRenderer = am5xy.AxisRendererX.new(root, {
+                minGridDistance: isModal ? 90 : 70,
+                cellStartLocation: 0.08,
+                cellEndLocation: 0.92
+            });
+            xRenderer.labels.template.setAll({ fontSize: isModal ? 15 : 13, fill: am5.color(0x333333) });
+            xRenderer.grid.template.setAll({ stroke: am5.color(0xc9c9c9), strokeOpacity: 0.9 });
+
+            const xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+                categoryField: 'month',
+                renderer: xRenderer,
+                tooltip: am5.Tooltip.new(root, { labelText: '{category}' })
+            }));
+            xAxis.data.setAll(revenueTrendData);
+
+            const yRenderer = am5xy.AxisRendererY.new(root, {});
+            yRenderer.labels.template.setAll({ fontSize: isModal ? 15 : 13, fill: am5.color(0x333333) });
+            yRenderer.grid.template.setAll({ stroke: am5.color(0xc9c9c9), strokeOpacity: 0.9 });
+
+            const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+                min: 0,
+                max: 180000,
+                strictMinMax: true,
+                renderer: yRenderer
+            }));
+
+            yAxis.children.unshift(am5.Label.new(root, {
+                rotation: -90,
+                text: '營業額 ($)\nRevenue ($)',
+                y: am5.p50,
+                centerX: am5.p50,
+                centerY: am5.p50,
+                fontSize: isModal ? 15 : 13,
+                fill: am5.color(0x333333)
+            }));
+
+            const series = chart.series.push(am5xy.LineSeries.new(root, {
+                name: 'Revenue',
+                xAxis: xAxis,
+                yAxis: yAxis,
+                categoryXField: 'month',
+                valueYField: 'revenue',
+                stroke: am5.color(0x9a4f18),
+                fill: am5.color(0x9a4f18),
+                tooltip: am5.Tooltip.new(root, {
+                    pointerOrientation: 'horizontal',
+                    labelText: '{label}'
+                })
+            }));
+            series.strokes.template.setAll({ strokeWidth: isModal ? 5 : 4 });
+
+            series.bullets.push(function(root, series, dataItem) {
+                const context = dataItem.dataContext || {};
+                if (context.isLast) {
+                    const container = am5.Container.new(root, {});
+                    const pulse = container.children.push(am5.Circle.new(root, {
+                        radius: isModal ? 12 : 10,
+                        fill: am5.color(0xe15f2a),
+                        fillOpacity: 0.72
+                    }));
+                    container.children.push(am5.Circle.new(root, {
+                        radius: isModal ? 9 : 7,
+                        fill: am5.color(0xa34f1b),
+                        stroke: am5.color(0xffffff),
+                        strokeWidth: 2
+                    }));
+                    pulse.animate({ key: 'radius', from: isModal ? 12 : 10, to: isModal ? 46 : 38, duration: 1350, loops: Infinity, easing: am5.ease.out(am5.ease.cubic) });
+                    pulse.animate({ key: 'opacity', from: 0.95, to: 0, duration: 1350, loops: Infinity, easing: am5.ease.out(am5.ease.cubic) });
+                    return am5.Bullet.new(root, { sprite: container });
+                }
+
+                return am5.Bullet.new(root, {
+                    sprite: am5.Circle.new(root, {
+                        radius: isModal ? 6 : 5,
+                        fill: am5.color(0x9a4f18),
+                        stroke: am5.color(0xffffff),
+                        strokeWidth: 2
+                    })
+                });
+            });
+
+            series.bullets.push(function(root, series, dataItem) {
+                return am5.Bullet.new(root, {
+                    locationY: 1,
+                    sprite: am5.Label.new(root, {
+                        text: dataItem.dataContext.label,
+                        centerX: am5.p50,
+                        centerY: am5.p100,
+                        dy: isModal ? -18 : -14,
+                        fontSize: isModal ? 14 : 12,
+                        fontWeight: '700',
+                        fill: am5.color(0x333333)
+                    })
+                });
+            });
+
+            series.data.setAll(revenueTrendData);
+
+            const cursor = chart.set('cursor', am5xy.XYCursor.new(root, {
+                behavior: 'none',
+                xAxis: xAxis
+            }));
+            cursor.lineY.set('visible', false);
+            cursor.lineX.setAll({
+                stroke: am5.color(0x333333),
+                strokeDasharray: [3, 3],
+                strokeOpacity: 0
+            });
+
+            chart.appear(800, 100);
+            series.appear(800);
+            return root;
+        }
+
+        function ensureRevenueTrendChart() {
+            const chartDiv = document.getElementById('revenueTrendChart');
+            if (!chartDiv || !window.am5 || !window.am5xy || !window.am5themes_Animated) return;
+
+            if (revenueTrendRoot) {
+                revenueTrendRoot.resize();
+                return;
+            }
+
+            revenueTrendRoot = buildRevenueTrendChart('revenueTrendChart');
+        }
+
+        function openRevenueTrendModal() {
+            if (!window.am5 || !window.am5xy || !window.am5themes_Animated) return;
+            revenueChartModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            window.requestAnimationFrame(function() {
+                if (revenueTrendModalRoot) revenueTrendModalRoot.dispose();
+                revenueTrendModalRoot = buildRevenueTrendChart('revenueTrendChartModal', true);
+            });
+        }
+
+        function closeRevenueTrendModal() {
+            revenueChartModal.classList.remove('active');
+            document.body.style.overflow = '';
+            if (revenueTrendModalRoot) {
+                revenueTrendModalRoot.dispose();
+                revenueTrendModalRoot = null;
+            }
+        }
+
+        revenueTrendCard?.addEventListener('click', openRevenueTrendModal);
+        revenueTrendCard?.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openRevenueTrendModal();
+            }
+        });
+
+        revenueChartModalClose?.addEventListener('click', closeRevenueTrendModal);
+        revenueChartModal?.addEventListener('click', function(event) {
+            if (event.target === revenueChartModal) {
+                closeRevenueTrendModal();
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (revenueTrendRoot) revenueTrendRoot.dispose();
+            if (revenueTrendModalRoot) revenueTrendModalRoot.dispose();
+        });
         function showTopic(targetId, shouldUpdateHash = true, shouldScroll = true) {
             const targetPanel = document.getElementById(targetId);
             if (!targetPanel) return;
@@ -1366,6 +1779,10 @@
             topicPanels.forEach(panel => {
                 panel.classList.toggle('active', panel.id === targetId);
             });
+
+            if (targetId === 'product-insights-detail') {
+                window.requestAnimationFrame(ensureRevenueTrendChart);
+            }
 
             if (shouldUpdateHash) {
                 history.replaceState(null, '', `#${targetId}`);
@@ -1391,6 +1808,9 @@
 
         const initialTopic = location.hash.replace('#', '') || 'product-insight';
         showTopic(initialTopic, false, false);
+        if (initialTopic === 'product-insights-detail') {
+            window.requestAnimationFrame(ensureRevenueTrendChart);
+        }
 
         const executeSandbox = document.getElementById('executeSandbox');
         const sandboxStore = document.getElementById('sandboxStore');
@@ -1466,6 +1886,10 @@
         }
 
         document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && revenueChartModal.classList.contains('active')) {
+                closeRevenueTrendModal();
+                return;
+            }
             if (e.key === 'Escape' && mapModal.classList.contains('active')) {
                 closeMapModal();
                 return;
