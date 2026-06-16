@@ -85,6 +85,605 @@
         }
 
         /* 區塊與網格樣式 */
+        .topic-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: rgba(253, 250, 247, 0.96);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 16px rgba(44,26,17,0.06);
+            backdrop-filter: blur(6px);
+        }
+
+        .topic-button {
+            appearance: none;
+            border: 1px solid #d7bda8;
+            background: #f3e4d8;
+            color: var(--primary-color);
+            border-radius: 999px;
+            padding: 12px 18px;
+            font: inherit;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(92,44,22,0.08);
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .topic-button:hover,
+        .topic-button:focus-visible {
+            border-color: var(--accent-color);
+            background: #f8eadf;
+            box-shadow: 0 6px 14px rgba(210,105,30,0.18);
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        .topic-button.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(92,44,22,0.28);
+            transform: translateY(-1px);
+        }
+
+        .topic-panel {
+            display: none;
+        }
+
+        .topic-panel.active {
+            display: block;
+            animation: panelFadeIn 0.22s ease;
+        }
+
+        @keyframes panelFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topic-nav {
+                position: static;
+            }
+
+            .topic-button {
+                flex: 1 1 100%;
+                justify-content: flex-start;
+                text-align: left;
+            }
+        }
+
+        .sandbox-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 24px;
+            align-items: stretch;
+            margin-bottom: 25px;
+        }
+
+        #product-insight > .section-title:not(.sandbox-title) {
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            .sandbox-layout {
+                grid-template-columns: minmax(0, 1fr) 410px;
+            }
+        }
+
+        .sandbox-layout .chart-box {
+            margin-bottom: 0;
+            padding: 20px;
+        }
+
+        .query-panel {
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 20px;
+            background: #fffdfb;
+            box-shadow: 0 6px 16px rgba(44,26,17,0.05);
+        }
+
+        .revenue-map-card {
+            text-align: left;
+            padding: 14px;
+        }
+
+        .revenue-map-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            color: var(--primary-color);
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .map-expand-button {
+            border: 1px solid #d7bda8;
+            background: #fff8f2;
+            color: var(--primary-color);
+            border-radius: 6px;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .map-expand-button:hover,
+        .map-expand-button:focus-visible {
+            border-color: var(--accent-color);
+            box-shadow: 0 3px 8px rgba(210,105,30,0.18);
+            outline: none;
+        }
+
+        .map-kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .map-kpi {
+            background: #fff8f2;
+            border: 1px solid #ead7c8;
+            border-radius: 8px;
+            padding: 9px 10px;
+            min-height: 54px;
+        }
+
+        .map-kpi .kpi-label {
+            color: #8a6250;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .map-kpi .kpi-main {
+            color: var(--primary-color);
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.15;
+        }
+
+        .map-kpi .kpi-sub {
+            color: #9e8576;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .nyc-map {
+            position: relative;
+            height: 265px;
+            overflow: hidden;
+            border: 1px solid #ead7c8;
+            border-radius: 8px;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .nyc-map.is-dragging {
+            cursor: grabbing;
+        }
+
+        .map-canvas {
+            position: absolute;
+            inset: 0;
+            transform-origin: center center;
+            transition: transform 0.22s ease;
+            background:
+                linear-gradient(108deg, transparent 0 28%, rgba(136,190,214,0.38) 28% 34%, transparent 34% 100%),
+                linear-gradient(74deg, transparent 0 62%, rgba(136,190,214,0.36) 62% 70%, transparent 70% 100%),
+                repeating-linear-gradient(0deg, rgba(186,176,162,0.18) 0 1px, transparent 1px 20px),
+                repeating-linear-gradient(90deg, rgba(186,176,162,0.18) 0 1px, transparent 1px 24px),
+                #f5efe7;
+        }
+
+        .map-canvas::before {
+            content: "NEW YORK";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: rgba(92,44,22,0.22);
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 12px;
+            pointer-events: none;
+        }
+
+        .revenue-map-card .map-kpi[data-store],
+        .map-pin {
+            cursor: pointer;
+        }
+
+        .map-pin {
+            animation: pinDrop 0.55s ease both;
+        }
+
+        .pin-astoria { animation-delay: 0.12s; }
+        .pin-lower { animation-delay: 0.24s; }
+
+        @keyframes pinDrop {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -70%) scale(0.75);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .map-pin.is-active {
+            outline: 4px solid rgba(92,44,22,0.28);
+            box-shadow: 0 0 0 12px rgba(255,255,255,0.62), 0 0 0 22px rgba(210,105,30,0.14), 0 12px 26px rgba(44,26,17,0.3);
+            z-index: 4;
+        }
+
+        .map-label.is-active {
+            border-color: var(--accent-color);
+            box-shadow: 0 7px 16px rgba(44,26,17,0.18);
+            z-index: 5;
+        }
+
+        .map-kpi.is-active {
+            border-color: var(--accent-color);
+            background: #fff0e4;
+            box-shadow: 0 5px 14px rgba(210,105,30,0.16);
+        }
+
+        .borough-label {
+            position: absolute;
+            color: rgba(92,44,22,0.38);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .map-pin {
+            position: absolute;
+            width: 58px;
+            height: 58px;
+            border: 0;
+            padding: 0;
+            border-radius: 999px;
+            transform: translate(-50%, -50%);
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            box-shadow: 0 0 0 9px rgba(255,255,255,0.46), 0 10px 22px rgba(44,26,17,0.24);
+        }
+
+        .map-pin::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border-radius: 50% 50% 50% 0;
+            background: currentColor;
+            transform: rotate(-45deg);
+            filter: brightness(0.52);
+        }
+
+        .map-pin::after {
+            content: "";
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ffffff;
+            top: 22px;
+        }
+
+        .pin-hells { left: 29%; top: 25%; background: #c55a1b; }
+        .pin-astoria { left: 76%; top: 25%; background: #3fa65a; }
+        .pin-lower { left: 40%; top: 68%; background: #e0aa18; }
+
+        .map-label {
+            position: absolute;
+            transform: translateY(-50%);
+            border: 1px solid #ead7c8;
+            background: rgba(255,255,255,0.92);
+            border-radius: 7px;
+            padding: 6px 8px;
+            color: var(--primary-color);
+            font: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.25;
+            box-shadow: 0 4px 10px rgba(44,26,17,0.08);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .map-label span {
+            display: block;
+            color: #7a6256;
+            font-weight: 700;
+        }
+
+        .label-hells { left: 35%; top: 25%; }
+        .label-astoria { left: 81%; top: 25%; }
+        .label-lower { left: 47%; top: 68%; }
+
+        .map-legend {
+            position: absolute;
+            left: 14px;
+            bottom: 12px;
+            background: rgba(255,255,255,0.88);
+            border: 1px solid #ead7c8;
+            border-radius: 7px;
+            padding: 8px 10px;
+            color: #7a6256;
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .map-zoom {
+            position: absolute;
+            right: 10px;
+            bottom: 12px;
+            display: grid;
+            gap: 4px;
+        }
+
+        .map-zoom button {
+            display: grid;
+            place-items: center;
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.92);
+            border: 1px solid #d8c6b8;
+            border-radius: 4px;
+            color: var(--primary-color);
+            font-weight: 900;
+            font: inherit;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .map-zoom button:hover,
+        .map-zoom button:focus-visible {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .map-detail {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ead7c8;
+            border-radius: 8px;
+            background: #fff8f2;
+            color: #7a6256;
+            font-size: 12px;
+        }
+
+        .map-detail strong {
+            display: block;
+            color: var(--primary-color);
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .map-modal-content {
+            width: min(1100px, 94vw);
+            max-height: 90vh;
+            overflow: auto;
+            cursor: auto;
+        }
+
+        .map-modal-content .revenue-map-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 22px;
+            width: auto;
+        }
+
+        .map-modal-content .nyc-map {
+            height: 520px;
+        }
+
+        .store-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        @media (min-width: 1100px) {
+            .store-hero-grid {
+                grid-template-columns: minmax(0, 4.15fr) minmax(230px, 1fr);
+                gap: 24px;
+            }
+
+            .store-hero-grid .nyc-map {
+                height: 390px;
+            }
+
+            .store-hero-grid .map-kpi-strip {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        .store-summary-narrow {
+            font-size: 15px;
+            line-height: 1.85;
+            padding: 24px 22px;
+            align-self: start;
+        }
+
+        .store-summary-narrow h4 {
+            font-size: 17px;
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .store-summary-narrow p {
+            margin-bottom: 0;
+        }
+
+        .map-caption {
+            color: #8a6250;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 760px) {
+            .map-kpi-strip {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .map-detail {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .nyc-map {
+                height: 320px;
+            }
+
+            .map-label {
+                white-space: normal;
+                max-width: 120px;
+            }
+        }
+
+        .query-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .query-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .query-status {
+            border-radius: 999px;
+            background: #2f8f46;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            white-space: nowrap;
+        }
+
+        .query-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .query-field label {
+            display: block;
+            color: var(--secondary-color);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .query-field select,
+        .query-field input {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #d9c5b6;
+            border-radius: 6px;
+            padding: 9px 10px;
+            color: var(--text-dark);
+            background: #ffffff;
+            font: inherit;
+        }
+
+        .execute-button {
+            width: 100%;
+            border: 0;
+            border-radius: 6px;
+            margin: 12px 0;
+            padding: 11px 14px;
+            background: var(--primary-color);
+            color: #ffffff;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .execute-button:hover,
+        .execute-button:focus-visible {
+            background: #4a220f;
+            outline: none;
+        }
+
+        .gauge-card {
+            min-height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .gauge-svg {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            margin: 8px auto 0;
+            display: block;
+        }
+
+        .gauge-needle {
+            transform-origin: 160px 160px;
+            transform: rotate(-90deg);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .gauge-value {
+            color: var(--primary-color);
+            font-size: 30px;
+            font-weight: 800;
+            margin-top: -8px;
+        }
+
+        .gauge-note {
+            color: #7a6256;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
         .section-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -312,16 +911,75 @@
             </div>
         </div>
 
-        <div class="section-card">
+        <nav class="topic-nav" aria-label="主題章節切換">
+            <button type="button" class="topic-button active" data-target="product-insight">&#128200; 營收趨勢與預測</button>
+            <button type="button" class="topic-button" data-target="product-insights-detail">&#128269; 產品洞察</button>
+            <button type="button" class="topic-button" data-target="product-mix">&#128202; 產品組合優化</button>
+            <button type="button" class="topic-button" data-target="time-staffing">&#9200; 黃金時段與排班建議</button>
+            <button type="button" class="topic-button" data-target="store-performance">&#128205; 店鋪與地理表現</button>
+            <button type="button" class="topic-button" data-target="boss-strategy">&#127919; 給老闆的精準加分策略</button>
+        </nav>
+
+        <div class="section-card topic-panel active" id="product-insight" data-topic-panel>
+            <h2 class="section-title sandbox-title">&#19968;&#12289;&#27770;&#31574;&#27801;&#30418;&#65306;7 &#26376;&#29151;&#25910;&#38928;&#28204;&#33287;&#26085;&#32218;&#32026;&#24215;&#37610;&#23526;&#26178;&#20132;&#21449;&#20998;&#26512; (Forecast & Real-time Query)</h2>
             <h2 class="section-title">一、營收趨勢、增長規律與 7 月數據預測 (Revenue, Growth & Forecast)</h2>
             
-            <div class="chart-box" style="margin-bottom: 25px; padding: 20px;">
+            <div class="sandbox-layout">
+            <div class="chart-box">
                 <div class="forecast-container">
                     <iframe src="coffee_sales_prediction_forecast.html" class="forecast-iframe"></iframe>
                 </div>
                 <div class="chart-label">【核心決策看板】每日行銷趨勢與 7 月營收動態預測（可在圖內自由滑動縮放、探索交叉數值）</div>
             </div>
 
+            <aside class="query-panel" aria-label="Forecast query panel">
+                <div class="query-header">
+                    <h3>&#128202; &#29151;&#26989;&#38989;&#24230;&#21147;&#35264;&#28204;&#20736;</h3>
+                    <span class="query-status">&#36039;&#26009;&#20489;&#20786;&#23601;&#32210;</span>
+                </div>
+                <div class="query-grid">
+                    <div class="query-field">
+                        <label for="sandboxStore">&#24215;&#37610;&#25818;&#40670; (Store)</label>
+                        <select id="sandboxStore">
+                            <option value="Astoria">Astoria</option>
+                            <option value="Hell's Kitchen">Hell's Kitchen</option>
+                            <option value="Lower Manhattan">Lower Manhattan</option>
+                        </select>
+                    </div>
+                    <div class="query-field">
+                        <label for="sandboxDate">&#29151;&#26989;&#26085;&#26399; (Date)</label>
+                        <input id="sandboxDate" type="date" min="2023-01-01" max="2023-07-31" value="2023-05-24">
+                    </div>
+                </div>
+                <button type="button" class="execute-button" id="executeSandbox">&#22519;&#34892;&#20132;&#21449;&#20998;&#26512; (Execute)</button>
+                <div class="gauge-card">
+                    <svg class="gauge-svg" viewBox="0 0 320 220" role="img" aria-label="Revenue gauge">
+                        <defs>
+                            <linearGradient id="revenueGaugeGradient" x1="35" y1="160" x2="285" y2="160" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#2cc65f"></stop>
+                                <stop offset="55%" stop-color="#f2d230"></stop>
+                                <stop offset="100%" stop-color="#f05a1a"></stop>
+                            </linearGradient>
+                        </defs>
+                        <path d="M 60 160 A 100 100 0 0 1 260 160" fill="none" stroke="#eadfd7" stroke-width="14" stroke-linecap="round"></path>
+                        <path d="M 60 160 A 100 100 0 0 1 260 160" fill="none" stroke="url(#revenueGaugeGradient)" stroke-width="14" stroke-linecap="round"></path>
+                        <text x="56" y="184" fill="#9e8576" font-size="12">0</text>
+                        <text x="149" y="48" fill="#9e8576" font-size="12">1300</text>
+                        <text x="248" y="184" fill="#9e8576" font-size="12">2600</text>
+                        <g class="gauge-needle" id="gaugeNeedle">
+                            <line x1="160" y1="160" x2="160" y2="72" stroke="#1d1713" stroke-width="4" stroke-linecap="round"></line>
+                            <circle cx="160" cy="160" r="7" fill="#1d1713"></circle>
+                        </g>
+                    </svg>
+                    <div class="gauge-value" id="gaugeValue">$0</div>
+                    <div class="gauge-note" id="gaugeNote">&#23578;&#26410;&#22519;&#34892;&#20132;&#21449;&#20998;&#26512;</div>
+                </div>
+            </aside>
+            </div>
+        </div>
+
+        <div class="section-card topic-panel" id="product-insights-detail" data-topic-panel>
+            <h2 class="section-title">產品洞察</h2>
             <div class="grid-2">
                 <div class="chart-box" style="margin-bottom: 0;">
                     <img src="revenue_trend.png" alt="總營收趨勢圖" class="zoomable-img">
@@ -337,8 +995,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="section-card">
+        <div class="section-card topic-panel" id="product-mix" data-topic-panel>
             <h2 class="section-title">二、產品組合優化 (Product Mix & Menu Engineering)</h2>
             <div class="grid-2">
                 <div class="chart-box">
@@ -370,7 +1027,7 @@
             </div>
         </div>
 
-        <div class="section-card">
+        <div class="section-card topic-panel" id="time-staffing" data-topic-panel>
             <h2 class="section-title">三、黃金時段與排班建議 (Time & Day Analysis)</h2>
             <div class="main-layout">
                 <div class="grid-charts-2">
@@ -391,15 +1048,74 @@
             </div>
         </div>
 
-        <div class="section-card">
+        <div class="section-card topic-panel" id="store-performance" data-topic-panel>
             <h2 class="section-title">四、店鋪與地理表現 (Store Performance)</h2>
             <div class="main-layout">
-                <div class="grid-2">
-                    <div class="chart-box">
-                        <img src="store_comparison.png" alt="分店營收表現對比" class="zoomable-img">
-                        <div class="chart-label">圖4-1 三大分店總營業額對比</div>
+                <div class="store-hero-grid">
+                    <div class="chart-box revenue-map-card" id="revenueMapCard">
+                        <div class="revenue-map-title">
+                            <span>1. 營業收地圖分布 (Revenue Map)</span>
+                            <button type="button" class="map-expand-button" id="openRevenueMapModal" aria-label="放大營收地圖">⛶</button>
+                        </div>
+                        <div class="map-kpi-strip">
+                            <div class="map-kpi">
+                                <div class="kpi-label">三大店總營收</div>
+                                <div class="kpi-main">$698,812</div>
+                                <div class="kpi-sub">2023/01-2023/06</div>
+                            </div>
+                            <div class="map-kpi" data-store="hells">
+                                <div class="kpi-label">排名 1</div>
+                                <div class="kpi-main">Hell's Kitchen</div>
+                                <div class="kpi-sub">$236,511</div>
+                            </div>
+                            <div class="map-kpi" data-store="astoria">
+                                <div class="kpi-label">排名 2</div>
+                                <div class="kpi-main">Astoria</div>
+                                <div class="kpi-sub">$232,244</div>
+                            </div>
+                            <div class="map-kpi" data-store="lower">
+                                <div class="kpi-label">排名 3</div>
+                                <div class="kpi-main">Lower Manhattan</div>
+                                <div class="kpi-sub">$230,057</div>
+                            </div>
+                        </div>
+                        <div class="nyc-map" aria-label="Revenue map showing three store locations">
+                            <div class="map-canvas">
+                                <span class="borough-label" style="left: 12%; top: 55%;">JERSEY CITY</span>
+                                <span class="borough-label" style="left: 45%; top: 33%;">MANHATTAN</span>
+                                <span class="borough-label" style="left: 80%; top: 37%;">QUEENS</span>
+                                <span class="borough-label" style="left: 47%; top: 82%;">BROOKLYN</span>
+
+                                <button type="button" class="map-pin pin-hells" data-store="hells" aria-label="Hell's Kitchen $236,511"></button>
+                                <button type="button" class="map-label label-hells" data-store="hells">Hell's Kitchen <span>$236,511</span></button>
+
+                                <button type="button" class="map-pin pin-astoria" data-store="astoria" aria-label="Astoria $232,244"></button>
+                                <button type="button" class="map-label label-astoria" data-store="astoria">Astoria <span>$232,244</span></button>
+
+                                <button type="button" class="map-pin pin-lower" data-store="lower" aria-label="Lower Manhattan $230,057"></button>
+                                <button type="button" class="map-label label-lower" data-store="lower">Lower Manhattan <span>$230,057</span></button>
+                            </div>
+
+                            <div class="map-legend">
+                                <strong>營業收 (USD)</strong><br>
+                                <span class="legend-dot" style="background:#c55a1b;"></span>&gt; $235K<br>
+                                <span class="legend-dot" style="background:#e0aa18;"></span>$230K - $235K<br>
+                                <span class="legend-dot" style="background:#3fa65a;"></span>$220K - $235K
+                            </div>
+                            <div class="map-zoom">
+                                <button type="button" data-zoom="in" aria-label="放大地圖">+</button>
+                                <button type="button" data-zoom="out" aria-label="縮小地圖">-</button>
+                            </div>
+                        </div>
+                        <div class="map-detail" aria-live="polite">
+                            <div>目前選取<strong data-map-detail="name">Hell's Kitchen</strong></div>
+                            <div>總營收<strong data-map-detail="revenue">$236,511</strong></div>
+                            <div>客單價<strong data-map-detail="aov">$4.66</strong></div>
+                            <div>策略重點<strong data-map-detail="note">熟豆零售強勢</strong></div>
+                        </div>
+                        <div class="map-caption">地圖氣泡大小代表總營收，顏色代表營收表現排名</div>
                     </div>
-                    <div class="insight-box">
+                    <div class="insight-box store-summary-narrow">
                         <h4>📍 總體地理表現摘要：</h4>
                         <p>雖然三家分店的總營業額極度接近（如圖4-1），但透過細分指標拆解發現，各店鋪背後的顧客結構與消費習慣存在巨大的地理與特質差異。我們分別針對這三家分店進行了深度數據畫像，點擊下方小圖即可全螢幕檢視具體細節：</p>
                     </div>
@@ -436,7 +1152,7 @@
             </div>
         </div>
 
-        <div class="section-card" style="border-top: 5px solid var(--primary-color);">
+        <div class="section-card topic-panel" id="boss-strategy" data-topic-panel style="border-top: 5px solid var(--primary-color);">
             <h2 class="section-title" style="color: var(--primary-color);">🎯 五、給老闆的精準加分策略 (Actionable Insights)</h2>
             <p>結合歷史指標與 7 月動態預測趨勢，以下三套方案能精準將數據轉化為現金流：</p>
             
@@ -464,11 +1180,269 @@
         <img class="modal-content" id="modalTargetImg" src="" alt="放大圖表">
     </div>
 
+    <div class="modal-overlay" id="mapModal">
+        <span class="modal-close" id="mapModalClose">&times;</span>
+        <div class="modal-content map-modal-content" id="mapModalContent"></div>
+    </div>
+
     <script>
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalTargetImg');
         const closeBtn = document.getElementById('modalClose');
         const zoomImages = document.querySelectorAll('.zoomable-img');
+        const topicButtons = document.querySelectorAll('.topic-button');
+        const topicPanels = document.querySelectorAll('[data-topic-panel]');
+        const mapModal = document.getElementById('mapModal');
+        const mapModalClose = document.getElementById('mapModalClose');
+        const mapModalContent = document.getElementById('mapModalContent');
+        const openRevenueMapModal = document.getElementById('openRevenueMapModal');
+
+        const storeMapData = {
+            hells: {
+                name: "Hell's Kitchen",
+                revenue: "$236,511",
+                aov: "$4.66",
+                note: "熟豆零售強勢"
+            },
+            astoria: {
+                name: "Astoria",
+                revenue: "$232,244",
+                aov: "$4.59",
+                note: "茶飲偏好明顯"
+            },
+            lower: {
+                name: "Lower Manhattan",
+                revenue: "$230,057",
+                aov: "$4.81",
+                note: "高含金量客群"
+            }
+        };
+
+        function setupRevenueMap(card) {
+            if (!card || card.dataset.mapReady === 'true') return;
+            card.dataset.mapReady = 'true';
+
+            const map = card.querySelector('.nyc-map');
+            const canvas = card.querySelector('.map-canvas');
+            const zoomIn = card.querySelector('[data-zoom="in"]');
+            const zoomOut = card.querySelector('[data-zoom="out"]');
+            let zoom = 1;
+            let panX = 0;
+            let panY = 0;
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartY = 0;
+            let startPanX = 0;
+            let startPanY = 0;
+
+            function renderTransform() {
+                canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+            }
+
+            function clampPan() {
+                if (zoom <= 1) {
+                    panX = 0;
+                    panY = 0;
+                    return;
+                }
+                const limitX = map.clientWidth * (zoom - 1) * 0.38;
+                const limitY = map.clientHeight * (zoom - 1) * 0.38;
+                panX = Math.max(-limitX, Math.min(limitX, panX));
+                panY = Math.max(-limitY, Math.min(limitY, panY));
+            }
+
+            function setZoom(nextZoom) {
+                zoom = Math.max(1, Math.min(1.45, nextZoom));
+                clampPan();
+                renderTransform();
+            }
+
+            function selectStore(storeId) {
+                const store = storeMapData[storeId];
+                if (!store) return;
+
+                card.querySelectorAll('[data-store]').forEach(node => {
+                    node.classList.toggle('is-active', node.dataset.store === storeId);
+                });
+
+                card.querySelectorAll('[data-map-detail]').forEach(node => {
+                    node.textContent = store[node.dataset.mapDetail];
+                });
+            }
+
+            card.querySelectorAll('[data-store]').forEach(node => {
+                node.addEventListener('click', event => {
+                    event.stopPropagation();
+                    selectStore(node.dataset.store);
+                });
+            });
+
+            zoomIn?.addEventListener('click', event => {
+                event.stopPropagation();
+                setZoom(zoom + 0.15);
+            });
+
+            zoomOut?.addEventListener('click', event => {
+                event.stopPropagation();
+                setZoom(zoom - 0.15);
+            });
+
+            map?.addEventListener('pointerdown', event => {
+                if (event.target.closest('button')) return;
+                isDragging = true;
+                map.classList.add('is-dragging');
+                dragStartX = event.clientX;
+                dragStartY = event.clientY;
+                startPanX = panX;
+                startPanY = panY;
+                map.setPointerCapture(event.pointerId);
+            });
+
+            map?.addEventListener('pointermove', event => {
+                if (!isDragging) return;
+                panX = startPanX + event.clientX - dragStartX;
+                panY = startPanY + event.clientY - dragStartY;
+                clampPan();
+                renderTransform();
+            });
+
+            map?.addEventListener('pointerup', event => {
+                isDragging = false;
+                map.classList.remove('is-dragging');
+                if (map.hasPointerCapture(event.pointerId)) {
+                    map.releasePointerCapture(event.pointerId);
+                }
+            });
+
+            map?.addEventListener('pointercancel', () => {
+                isDragging = false;
+                map.classList.remove('is-dragging');
+            });
+
+            selectStore('hells');
+            renderTransform();
+        }
+
+        document.querySelectorAll('.revenue-map-card').forEach(setupRevenueMap);
+
+        function closeMapModal() {
+            mapModal.classList.remove('active');
+            mapModalContent.innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        openRevenueMapModal?.addEventListener('click', function() {
+            const sourceCard = document.getElementById('revenueMapCard');
+            if (!sourceCard) return;
+            const modalCard = sourceCard.cloneNode(true);
+            modalCard.id = 'revenueMapCardModal';
+            modalCard.querySelector('#openRevenueMapModal')?.remove();
+            modalCard.dataset.mapReady = 'false';
+            mapModalContent.innerHTML = '';
+            mapModalContent.appendChild(modalCard);
+            mapModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setupRevenueMap(modalCard);
+        });
+
+        mapModalClose?.addEventListener('click', closeMapModal);
+
+        mapModal?.addEventListener('click', function(event) {
+            if (event.target === mapModal) {
+                closeMapModal();
+            }
+        });
+
+        function showTopic(targetId, shouldUpdateHash = true, shouldScroll = true) {
+            const targetPanel = document.getElementById(targetId);
+            if (!targetPanel) return;
+
+            topicButtons.forEach(button => {
+                const isActive = button.dataset.target === targetId;
+                button.classList.toggle('active', isActive);
+                button.setAttribute('aria-pressed', String(isActive));
+            });
+
+            topicPanels.forEach(panel => {
+                panel.classList.toggle('active', panel.id === targetId);
+            });
+
+            if (shouldUpdateHash) {
+                history.replaceState(null, '', `#${targetId}`);
+            }
+
+            if (shouldScroll) {
+                document.querySelector('.topic-nav')?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        topicButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                showTopic(this.dataset.target);
+            });
+        });
+
+        window.addEventListener('hashchange', function() {
+            showTopic(location.hash.replace('#', ''), false);
+        });
+
+        const initialTopic = location.hash.replace('#', '') || 'product-insight';
+        showTopic(initialTopic, false, false);
+
+        const executeSandbox = document.getElementById('executeSandbox');
+        const sandboxStore = document.getElementById('sandboxStore');
+        const sandboxDate = document.getElementById('sandboxDate');
+        const gaugeNeedle = document.getElementById('gaugeNeedle');
+        const gaugeValue = document.getElementById('gaugeValue');
+        const gaugeNote = document.getElementById('gaugeNote');
+
+        function seededNoise(store, dateText) {
+            const key = `${store}-${dateText}`;
+            let hash = 0;
+            for (let i = 0; i < key.length; i++) {
+                hash = (hash * 31 + key.charCodeAt(i)) % 9973;
+            }
+            return (hash / 9973) - 0.5;
+        }
+
+        function estimateDailyRevenue(store, dateText) {
+            const date = new Date(`${dateText}T00:00:00`);
+            if (Number.isNaN(date.getTime())) return 0;
+
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const weekday = date.getDay();
+            const monthRamp = Math.max(0, Math.min(6, month - 1)) * 170;
+            const storeBoost = {
+                Astoria: 0,
+                "Hell's Kitchen": 95,
+                "Lower Manhattan": 45
+            }[store] || 0;
+            const weekendLift = weekday === 0 || weekday === 6 ? -35 : 45;
+            const seasonalPulse = Math.sin((day / 31) * Math.PI * 2) * 120;
+            const noise = seededNoise(store, dateText) * 260;
+            const revenue = 780 + monthRamp + storeBoost + weekendLift + seasonalPulse + noise;
+            return Math.max(0, Math.min(2600, Math.round(revenue)));
+        }
+
+        function updateGauge(revenue, store, dateText) {
+            const maxRevenue = 2600;
+            const ratio = Math.max(0, Math.min(1, revenue / maxRevenue));
+            const angle = -90 + ratio * 180;
+            gaugeNeedle.style.transform = `rotate(${angle}deg)`;
+            gaugeValue.textContent = `$${revenue.toLocaleString('en-US')}`;
+            gaugeNote.textContent = `${store} / ${dateText} forecast revenue`;
+        }
+
+        executeSandbox?.addEventListener('click', function() {
+            const store = sandboxStore.value;
+            const dateText = sandboxDate.value;
+            const revenue = estimateDailyRevenue(store, dateText);
+            updateGauge(revenue, store, dateText);
+        });
 
         zoomImages.forEach(img => {
             img.addEventListener('click', function() {
@@ -492,6 +1466,10 @@
         }
 
         document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mapModal.classList.contains('active')) {
+                closeMapModal();
+                return;
+            }
             if (e.key === 'Escape' && modal.classList.contains('active')) {
                 closeModal();
             }
